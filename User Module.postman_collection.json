@@ -1,0 +1,826 @@
+{
+	"info": {
+		"_postman_id": "a71bfe16-16b5-4ba5-8ce4-16b677d03e2c",
+		"name": "User Module",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28158963",
+		"_collection_link": "https://galactic-star-734499.postman.co/workspace/Api-Tracker-Team-~4af7f766-5b58-405b-bda8-481b0e33eef8/collection/28141434-a71bfe16-16b5-4ba5-8ce4-16b677d03e2c?action=share&creator=28158963&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Positive Test Cases",
+			"item": [
+				{
+					"name": "create user(UM_0012)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var uname = \"API Tracker_\" + pm.variables.replaceIn('{{$randomInt}}');\r",
+									"pm.environment.set(\"userFirstName\", uname);\r",
+									"var rid= [\"R01\",\"R02\"]\r",
+									"pm.environment.set(\"roleId\", rid[_.random(rid.length-1)]);\r",
+									"var pno=pm.variables.replaceIn('{{$randomInt}}');\r",
+									"pm.environment.set(\"userPhoneNumber\", pno);\r",
+									"\r",
+									"var u_role_Status =[\"Active\", \"InActive\", \"Inprogress\",\"Completed\"];\r",
+									"var urolestatus = u_role_Status[Math.floor(Math.random() * 4)];\r",
+									"var time_zone =[\"CST\",\"EST\",\"IST\",\"PST\",\"MST\"];\r",
+									"var userTimeZone = time_zone[Math.floor(Math.random() * 5)];\r",
+									"var u_visaStatus =[\"Not-Specified\",\"NA\",\"GC-EAD\",\"H4-EAD\", \"H4\",\"H1B\",\"Canada-EAD\",\"Indian-Citizen\", \"US-Citizen\",\"Canada-Citizen\"];\r",
+									"var userVisaStatus = u_visaStatus[Math.floor(Math.random() * 10)];\r",
+									"\r",
+									"pm.environment.set(\"userRoleStatus\",urolestatus);\r",
+									"pm.environment.set(\"userTimeZone\",userTimeZone);\r",
+									"pm.environment.set(\"userVisaStatus\",userVisaStatus);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"pm.globals.set(\"userId\",response.userId);\r",
+									"//pm.globals.set(\"userFirstName\",response.userFirstName);\r",
+									"\r",
+									"pm.globals.set(\"userpayload\",JSON.stringify(response));\r",
+									"\r",
+									"\r",
+									"pm.test(\"check status code\", function()\r",
+									"{\r",
+									"    pm.response.to.have.status(201);\r",
+									"})\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"var schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"userId\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"userFirstName\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"userLastName\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"userPhoneNumber\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"userLocation\": {\r",
+									"      \"type\": \"null\"\r",
+									"    },\r",
+									"    \"userTimeZone\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"userLinkedinUrl\": {\r",
+									"      \"type\": \"null\"\r",
+									"    },\r",
+									"    \"userEduUg\": {\r",
+									"      \"type\": \"null\"\r",
+									"    },\r",
+									"    \"userEduPg\": {\r",
+									"      \"type\": \"null\"\r",
+									"    },\r",
+									"    \"userVisaStatus\": {\r",
+									"      \"type\": \"string\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"userId\",\r",
+									"    \"userFirstName\",\r",
+									"    \"userLastName\",\r",
+									"    \"userPhoneNumber\",\r",
+									"    \"userLocation\",\r",
+									"    \"userTimeZone\",\r",
+									"    \"userLinkedinUrl\",\r",
+									"    \"userEduUg\",\r",
+									"    \"userEduPg\",\r",
+									"    \"userVisaStatus\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"pm.test(\"JSON Schema Validation\",()=>{\r",
+									"    pm.expect(tv4.validate(jsonData,schema)).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n\"userFirstName\": \"{{userFirstName}}\",\r\n\"userLastName\": \"{{$randomLastName}}\",\r\n\"userPhoneNumber\":\"{{userPhoneNumber}}\",\r\n\"userRoleMaps\": [\r\n{\r\n\"roleId\": \"{{roleId}}\",\r\n\"userRoleStatus\": \"{{userRoleStatus}}\"\r\n}\r\n],\r\n\"userTimeZone\": \"{{userTimeZone}}\",\r\n\"userVisaStatus\": \"{{userVisaStatus}}\"\r\n\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/users/roleStatus",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"users",
+								"roleStatus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User All(UM_001)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The endpoint returns the expected status code: 200 OK\",()=>",
+									"{",
+									"    const expectedStatusCode = 200;",
+									"    pm.response.to.have.status(expectedStatusCode);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Roles(UM_003)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/users/roles",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"users",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User By UserId(UM_002)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The endpoint returns the expected status code: 200 OK\",()=>",
+									"{",
+									"    const expectedStatusCode = 200;",
+									"    pm.response.to.have.status(expectedStatusCode);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/users/{{userId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User getAllStaff(UM_004)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/users/getAllStaff",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"users",
+								"getAllStaff"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateUser By userId(UM_006)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var putpayload=JSON.parse(pm.globals.get(\"userpayload\"));",
+									"",
+									"var uFirstName = \"APItrackers_\" + pm.variables.replaceIn('{{$randomInt}}')",
+									"",
+									"var uLastName = pm.variables.replaceIn('{{$randomLastName}}');",
+									"putpayload.userFirstName=uFirstName;",
+									"putpayload.userLastName=uLastName;",
+									"",
+									"pm.globals.set(\"userpayload\",JSON.stringify(putpayload));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    pm.test(\"Status code is 200\", function () {",
+									"        pm.expect(pm.response.code).to.equal(200);",
+									"    });",
+									"} else {",
+									"    pm.test(\"Status code is not 200\", function () {",
+									"        pm.expect(pm.response.code).to.not.equal(200);",
+									"    });",
+									"};",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{userpayload}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/users/{{userId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateUserRoleStatus By IvalidID(UM_007)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 400) {",
+									"    pm.test(\"Status code is 400\", function () {",
+									"        pm.expect(pm.response.code).to.equal(400);",
+									"    });",
+									"} else {",
+									"    pm.test(\"Status code is not 400\", function () {",
+									"        pm.expect(pm.response.code).to.not.equal(400);",
+									"    });",
+									"};"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"roleId\": \"R02\",\n  \"userRoleStatus\": \"LMS_Staff\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/users/roleStatus/{{userId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"users",
+								"roleStatus",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign UpdateUser RoleProgram Batch Status(UM_008)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var uRoleId = \"APItrackers_\" + pm.variables.replaceIn('{{$randomInt}}');",
+									"pm.environment.set(\"roleId\",uRoleId);",
+									"",
+									"",
+									"var putpayload=JSON.parse(pm.globals.get(\"userpayload\"));",
+									"",
+									"var uFirstName = \"APItrackers_\" + pm.variables.replaceIn('{{$randomInt}}')",
+									"",
+									"var uLastName = pm.variables.replaceIn('{{$randomLastName}}');",
+									"putpayload.userFirstName=uFirstName;",
+									"putpayload.userLastName=uLastName;",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.globals.set('roleId',response.roleId);",
+									"var response = pm.response.json();",
+									"pm.globals.set('programId',response.programId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{userpayload}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/users/roleProgramBatchStatus/{{userId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"users",
+								"roleProgramBatchStatus",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User(UM_014)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/users/{{userId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Neagtive Test Cases",
+			"item": [
+				{
+					"name": "User by invalidID(UM_005)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The endpoint returns the expected status code: 404 Not Found\",()=>",
+									"{",
+									"    const expectedStatusCode = 404;",
+									"    pm.response.to.have.status(expectedStatusCode);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/users/U126?var={{userId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"users",
+								"U126"
+							],
+							"query": [
+								{
+									"key": "var",
+									"value": "{{userId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateInvalidUser(UM_013)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"",
+									"var uname = \"API Tracker-\" + pm.variables.replaceIn('{{$randomInt}}');",
+									"pm.environment.set(\"userFirstName\", uname);",
+									"var rid= [\"R01\",\"R02\"]",
+									"pm.environment.set(\"roleId\", rid[_.random(rid.length-1)]);",
+									"/*",
+									"var pno=pm.variables.replaceIn('{{$randomInt}}');",
+									"pm.environment.set(\"userPhoneNumber\", pno);",
+									"*/"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();",
+									"pm.globals.set(\"userId\",response.userId);",
+									"pm.globals.set(\"userFirstName\",response.userFirstName);",
+									"",
+									"pm.globals.set(\"userpayload\",JSON.stringify(response));",
+									"",
+									"",
+									"pm.test(\"check status code\", function()",
+									"{",
+									"    pm.response.to.have.status(400);",
+									"})",
+									"/*",
+									"var response = pm.response.json();",
+									"console.log(response)",
+									"pm.test(\"checking userTimeZone type to be in valid list\", function()",
+									"{",
+									"    pm.expect(response).to.be.an('object')",
+									"    pm.expect(response.roleId).to.be.oneOf([\"R01\",\"R02\",\"R03\"]",
+									"    )",
+									"",
+									"});",
+									"var response = pm.response.json();",
+									"console.log(response)",
+									"pm.test(\"checking userTimeZone type to be in valid list\", function()",
+									"{",
+									"    pm.expect(response).to.be.an('object')",
+									"    pm.expect(response.userTimeZone).to.be.oneOf([\"CST\",\"EST\",\"IST\",\"PST\",\"MST\"]",
+									"    )",
+									"",
+									"});",
+									"*/"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n\"userFirstName\": \"{{userFirstName}}\",\n\"userLastName\": \"Das\",\n\"userPhoneNumber\":\"715\",\n\"userRoleMaps\": [\n{\n\"roleId\": \"{{roleId}}\",\n\"userRoleStatus\": \"active\"\n}\n],\n\"userTimeZone\": \"CST\",\n\"userVisaStatus\": \"H4\"\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/users/roleStatus",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"users",
+								"roleStatus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateUser By userId(UM_009)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var uFirstName = \"APItrackers_\" + pm.variables.replaceIn('{{$randomInt}}');",
+									"",
+									"pm.environment.set(\"userFirstName\",uFirstName);",
+									"",
+									"var uLastName = pm.variables.replaceIn('{{$randomFirstName}}');",
+									"",
+									"pm.environment.set(\"userLastName\",uLastName);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userComments\": \"String\",\n  \"userEduPg\": \"String\",\n  \"userEduUg\": \"String\",\n  \"userFirstName\": \"{{userFirstName}}\",\n  \"userId\": \"{{userId}}\",\n  \"userLastName\": \"{{userLastName}}\",\n  \"userLinkedinUrl\": \"String\",\n  \"userLocation\": \"String\",\n \n  \"userPhoneNumber\": 475200100,\n  \"userTimeZone\": \"String\",\n  \"userVisaStatus\": \"H4-EAD\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/users/U126",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"users",
+								"U126"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateUserRoleStatus neg By ID(UM_010)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 400) {",
+									"    pm.test(\"Status code is 400\", function () {",
+									"        pm.expect(pm.response.code).to.equal(400);",
+									"    });",
+									"} else {",
+									"    pm.test(\"Status code is not 400\", function () {",
+									"        pm.expect(pm.response.code).to.not.equal(400);",
+									"    });",
+									"};"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var putpayload=JSON.parse(pm.globals.get(\"userpayload\"));",
+									"",
+									"var roleID = [\"R01\"]",
+									"",
+									"var urolestatus = [\"Active\"];",
+									"putpayload.roleId=roleID;",
+									"putpayload.userRoleStatus=urolestatus;",
+									"",
+									"pm.globals.set(\"userpayload\",JSON.stringify(putpayload));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{userpayload}}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/users/roleStatus/{{userId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"users",
+								"roleStatus",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Invalid UpdateUserRoleProgramBatchStatus(UM_011)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"programId\":\"{{programId}}\",\n  \"roleId\": \"{{roleId}}\",\n  \"userId\": \"string\",\n  \"userRoleProgramBatches\": [\n    {\n      \"batchId\": \"\",\n      \"userRoleProgramBatchStatus\": \"string\"\n    }\n  ]}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/users/roleProgramBatchStatus/{{userId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"users",
+								"roleProgramBatchStatus",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User By InvalidID(UM_015)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/users/users/U126?var={{uid}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"users",
+								"U126"
+							],
+							"query": [
+								{
+									"key": "var",
+									"value": "{{uid}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,159 @@
+{
+	"id": "7d35ef2b-1d17-49ef-8cc2-a07acdc3e98e",
+	"values": [
+		{
+			"key": "baseURL",
+			"value": "https://lms-api-hackathon-june2023-930a8b0f895d.herokuapp.com/lms",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "programId",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "programpayload",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "assignmentId",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "dueDate",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "pathAttachment1",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "pathAttachment2",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "pathAttachment3",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "pathAttachment4",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "pathAttachment5",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "assignmentpayload",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "userId",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "userFirstName",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "userpayload",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "batchId",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "batchName",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "batchpayload",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "programN",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "pname",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "subDateTime",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "assignmentsubmitpayload",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "assignmentsubmittionId",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "bName",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "batchstatus",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "roleId",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2023-06-29T13:47:55.066Z",
+	"_postman_exported_using": "Postman/10.15.7-230626-1443"
+}

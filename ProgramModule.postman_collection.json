@@ -1,0 +1,676 @@
+{
+	"info": {
+		"_postman_id": "5c75bb7e-7144-4856-8d26-f275ef04bac4",
+		"name": "Program Module",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28158963",
+		"_collection_link": "https://galactic-star-734499.postman.co/workspace/Api-Tracker-Team-~4af7f766-5b58-405b-bda8-481b0e33eef8/collection/28141434-5c75bb7e-7144-4856-8d26-f275ef04bac4?action=share&creator=28158963&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Positive Test Cases",
+			"item": [
+				{
+					"name": "Create new Program(PM_001)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"var response = pm.response.json();\r",
+									"console.log(response);\r",
+									"pm.globals.set(\"programId\",response.programId);\r",
+									"pm.globals.set(\"programN\",response.programName);\r",
+									"pm.globals.set(\"programpayload\",JSON.stringify(response));\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"check response body\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.programId).to.be.greaterThan(0);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"  pm.response.to.have.status(\"Created\");\r",
+									"});\r",
+									"var jsonData = pm.response.json();\r",
+									"var schema = {\r",
+									" \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"programId\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"programName\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"programDescription\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"programStatus\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"creationTime\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"lastModTime\": {\r",
+									"      \"type\": \"string\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"programId\",\r",
+									"    \"programName\",\r",
+									"    \"programDescription\",\r",
+									"    \"programStatus\",\r",
+									"    \"creationTime\",\r",
+									"    \"lastModTime\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"pm.test(\"JSON Schema Validation\",()=>{\r",
+									"    pm.expect(tv4.validate(jsonData,schema)).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"var pname = \"Jun23-API Tracker-SDET-\" + pm.variables.replaceIn('{{$randomInt}}');\r",
+									"\r",
+									"var pdes = \"Postman Hackathon\" + pm.variables.replaceIn('{{$randomInt}}');\r",
+									"var p_Status =[\"Active\", \"InActive\", \"Inprogress\",\"Completed\"];\r",
+									"var pstatus = p_Status[Math.floor(Math.random() * 4)];\r",
+									"\r",
+									"pm.environment.set(\"programName\", pname);\r",
+									"\r",
+									"pm.environment.set(\"programDescription\",pdes);\r",
+									"\r",
+									"\r",
+									"pm.environment.set(\"pstatus\",pstatus);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"programDescription\": \"{{programDescription}}\",\r\n  \"programName\": \"{{programName}}\",\r\n  \"programStatus\": \"{{pstatus}}\"\r\n  \r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{baseURL}}/saveprogram",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"saveprogram"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AllPrograms(PM_003)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"if (pm.response.code === 200) {\r",
+									"    pm.test(\"Status code is 200\", function () {\r",
+									"        pm.expect(pm.response.code).to.equal(200);\r",
+									"    });\r",
+									"} else {\r",
+									"    pm.test(\"Status code is not 200\", function () {\r",
+									"        pm.expect(pm.response.code).to.not.equal(200);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/allPrograms",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"allPrograms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "One Program By Id(PM_004)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {\r",
+									"    pm.test(\"Status code is 200\", function () {\r",
+									"        pm.expect(pm.response.code).to.equal(200);\r",
+									"    });\r",
+									"} else {\r",
+									"    pm.test(\"Status code is not 200\", function () {\r",
+									"        pm.expect(pm.response.code).to.not.equal(200);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/programs/{{programId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"programs",
+								"{{programId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Program By Id(PM_006)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var putpayload=JSON.parse(pm.globals.get(\"programpayload\"));\r",
+									"\r",
+									"var pdes = \"Postman Hackathon\" + pm.variables.replaceIn('{{$randomInt}}');\r",
+									"var pname = \"Jun23-API Tracker-SDET-\" + pm.variables.replaceIn('{{$randomInt}}');\r",
+									"putpayload.programDescription=pdes;\r",
+									"putpayload.programName=pname;\r",
+									"pm.globals.set(\"programpayload\",JSON.stringify(putpayload));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code == 200) {\r",
+									"    pm.test(\"Status code is 200\", function () {\r",
+									"        pm.expect(pm.response.code).to.equal(200);\r",
+									"    });\r",
+									"} else {\r",
+									"    pm.test(\"Status code is not 200\", function () {\r",
+									"        pm.expect(pm.response.code).to.not.equal(200);\r",
+									"    });\r",
+									"}\r",
+									"pm.test(\"check response body\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.programId).to.be.greaterThan(0);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.globals.set(\"programId\",response.programId);\r",
+									"pm.globals.set(\"programN\",response.programName);\r",
+									"pm.globals.set(\"programpayload\",JSON.stringify(response));\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{programpayload}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/putprogram/{{programId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"putprogram",
+								"{{programId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateProgramByName(PM_007)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var putpayload=JSON.parse(pm.globals.get(\"programpayload\"));\r",
+									"\r",
+									"\r",
+									"var pdes = \"SDET\" + pm.variables.replaceIn('{{$randomInt}}');\r",
+									"putpayload.programDescription=pdes;\r",
+									"\r",
+									"pm.globals.set(\"programpayload\",JSON.stringify(putpayload));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"/*pm.test(\"check response body\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.programId).to.be.greaterThan(0);\r",
+									"});\r",
+									"var response = pm.response.json();\r",
+									"console.log(response)\r",
+									"pm.test(\"checking data type\", function()\r",
+									"{\r",
+									"    pm.expect(response).to.be.an('object')\r",
+									"    pm.expect(response.programName).to.be.an('string')\r",
+									"\r",
+									"})*/\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{programpayload}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/program/{{programN}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"program",
+								"{{programN}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteByProgramId(PM_010)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {\r",
+									"    pm.test(\"Status code is 200\", function () {\r",
+									"        pm.expect(pm.response.code).to.equal(200);\r",
+									"    });\r",
+									"} else {\r",
+									"    pm.test(\"Status code is not 200\", function () {\r",
+									"        pm.expect(pm.response.code).to.not.equal(200);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/deletebyprogid/{{programId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"deletebyprogid",
+								"{{programId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteByProgramName(PM_011)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {\r",
+									"    pm.test(\"Status code is 200\", function () {\r",
+									"        pm.expect(pm.response.code).to.equal(200);\r",
+									"    });\r",
+									"} else {\r",
+									"    pm.test(\"Status code is not 200\", function () {\r",
+									"        pm.expect(pm.response.code).to.not.equal(200);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/deletebyprogname/{{programN}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"deletebyprogname",
+								"{{programN}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Negative Test Cases",
+			"item": [
+				{
+					"name": "CreateAndSaveExistingPM_002)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"var response = pm.response.json();\r",
+									"console.log(response);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"programDescription\": \"{{nprogramDescription}}\",\r\n  \"programName\": \"{{nprogramName}}\",\r\n  \"programStatus\": \"{{npstatus}}\"\r\n  \r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{baseURL}}/saveprogram",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"saveprogram"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OneProgramByInvalidID(PM_005)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"var response = pm.response.json();\r",
+									"console.log(response);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/{{programId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"{{programId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateProgramByInvalidName(PM_008)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var putpayload=JSON.parse(pm.globals.get(\"programpayload\"));\r",
+									"\r",
+									"\r",
+									"var pdes = \"SDET\" + pm.variables.replaceIn('{{$randomInt}}');\r",
+									"putpayload.programDescription=pdes;\r",
+									"\r",
+									"pm.globals.set(\"programpayload\",JSON.stringify(putpayload));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{programpayload}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/program/{{programN}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"program",
+								"{{programN}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateProgramByMissingName(PM_009)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var putpayload=JSON.parse(pm.globals.get(\"programpayload\"));\r",
+									"\r",
+									"\r",
+									"var pdes = \"SDET\" + pm.variables.replaceIn('{{$randomInt}}');\r",
+									"putpayload.programDescription=pdes;\r",
+									"\r",
+									"pm.globals.set(\"programpayload\",JSON.stringify(putpayload));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{programpayload}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/program/{{programN}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"program",
+								"{{programN}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteByProgramByDeletedId(012)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {\r",
+									"    pm.test(\"Status code is 200\", function () {\r",
+									"        pm.expect(pm.response.code).to.equal(200);\r",
+									"    });\r",
+									"} else {\r",
+									"    pm.test(\"Status code is not 200\", function () {\r",
+									"        pm.expect(pm.response.code).to.not.equal(200);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/deletebyprogname/{{programId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"deletebyprogname",
+								"{{programId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "create program",
+			"value": "saveprogram"
+		}
+	]
+}

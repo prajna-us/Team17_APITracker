@@ -1,0 +1,572 @@
+{
+	"info": {
+		"_postman_id": "9b13a8ea-7bb7-400a-b8e8-289d8cafd21b",
+		"name": "Assignment Submit Module",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28139720",
+		"_collection_link": "https://galactic-star-734499.postman.co/workspace/Api-Tracker-Team-~4af7f766-5b58-405b-bda8-481b0e33eef8/collection/28141434-9b13a8ea-7bb7-400a-b8e8-289d8cafd21b?action=share&creator=28139720&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Positive Test Cases",
+			"item": [
+				{
+					"name": "Post_AssignmentSubmission_with valid data",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//Grading can happen only after the assignment's due date is passed. Till that time, \r",
+									"//grading will not accept any values and will show the grade value as ‘-1’ which is a placeholder.  ‘GradedBy’ is a //String and can be any user \r",
+									"\r",
+									"/*var due=JSON.parse(pm.globals.get(\"dueDate\"));  \r",
+									"if(due>Datenow) \r",
+									"{\r",
+									"var grade= [\"1\",\"2\",\"3\"];\r",
+									"pm.environment.set(\"grade\",grade);\r",
+									"}\r",
+									"else{\r",
+									"   grade=0; \r",
+									"   pm.environment.set(\"grade\",grade);\r",
+									"}*/\r",
+									"var moment = require(\"moment\")\r",
+									"pm.globals.set(\"subDateTime\", moment().format(\"MM-DD-YYYY HH:mm:SS\"));\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"POST_Program\",()=>{\r",
+									"\r",
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.globals.set(\"assignmentsubmitpayload\",JSON.stringify(response));\r",
+									"console.log(response.assignmentID)\r",
+									"console.log(response.userId)\r",
+									"console.log(response.subDesc)\r",
+									"   pm.globals.set(\"assignmentsubmittionId\",response.assignmentId); \r",
+									"  \r",
+									"    pm.environment.set(\"userId\",response.userId);\r",
+									"   pm.environment.set(\"subDesc\",response.subDesc);\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"var schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"submissionId\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"assignmentId\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"userId\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"subDesc\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"subComments\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"subDateTime\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"gradedBy\": {\r",
+									"      \"type\": \"null\"\r",
+									"    },\r",
+									"    \"gradedDateTime\": {\r",
+									"      \"type\": \"null\"\r",
+									"    },\r",
+									"    \"grade\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"submissionId\",\r",
+									"    \"assignmentId\",\r",
+									"    \"userId\",\r",
+									"    \"subDesc\",\r",
+									"    \"subComments\",\r",
+									"    \"subDateTime\",\r",
+									"    \"gradedBy\",\r",
+									"    \"gradedDateTime\",\r",
+									"    \"grade\"\r",
+									"  ]\r",
+									"}\r",
+									"\r",
+									"pm.test(\"JSON Schema Validation\",()=>{\r",
+									"    pm.expect(tv4.validate(jsonData,schema)).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n    \"assignmentId\": \"{{assignmentId}}\",\r\n    \"userId\": \"{{userId}}\",\r\n    \"subDesc\": \"subDesc for U19\",\r\n    \"subComments\": \"subComments for U19\",\r\n    \"subDateTime\": \"{{subDateTime}}\",\r\n    \"gradedBy\": null,\r\n    \"gradedDateTime\": null,\r\n    \"grade\": -1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/assignmentsubmission",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"assignmentsubmission"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Submission(ASM_001",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful GET request\", () => {\r",
+									"  pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Test header is present\",()=>{\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Header Content-Type is application/json\",()=>{\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/assignmentsubmission",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"assignmentsubmission"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Grades by Assignment ID(ASM_002)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/assignmentsubmission/getGrades/{{assignmentsubmittionId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"assignmentsubmission",
+								"getGrades",
+								"{{assignmentsubmittionId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Grades by StudentID(ASM_003)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n\r\npm.test(\"Test header is present\",()=>{\r\n    pm.response.to.have.header(\"Content-Type\");\r\n})\r\n\r\npm.test(\"Header Content-Type is application/json\",()=>{\r\n    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');\r\n})"
+						},
+						"url": {
+							"raw": "{{baseURL}}/assignmentsubmission/getGradesByStudentId/R03",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"assignmentsubmission",
+								"getGradesByStudentId",
+								"R03"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Grades by BatchID(ASM_004)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test header is present\",()=>{\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Header Content-Type is application/json\",()=>{\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/assignmentsubmission/grades/{{batchID}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"assignmentsubmission",
+								"grades",
+								"{{batchID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Submission by User ID(ASM_005)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test header is present\",()=>{\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Header Content-Type is application/json\",()=>{\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/assignmentsubmission/student/{{userId}}\n",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"assignmentsubmission",
+								"student",
+								"{{userId}}\n"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Submission by batch ID(ASM_006)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test header is present\",()=>{\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Header Content-Type is application/json\",()=>{\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('text/html;charset=utf-8');\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}} /assignmentsubmission/studentbatch/{{batchId}}\n",
+							"host": [
+								"{{baseURL}} "
+							],
+							"path": [
+								"assignmentsubmission",
+								"studentbatch",
+								"{{batchId}}\n"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resubmit Assignment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test header is present\",()=>{\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Header Content-Type is application/json\",()=>{\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('text/html;charset=utf-8');\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var putpayload=JSON.parse(pm.globals.get(\"assignmentsubmitpayload\"));\r",
+									"\r",
+									"var asId = \"11\" + pm.variables.replaceIn('{{$randomInt}}');\r",
+									"putpayload.assignmentId=asId;\r",
+									"pm.globals.set(\"assignmentsubmitpayload\",JSON.stringify(putpayload));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{assignmentsubmitpayload}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}} /assignmentsubmission/{{submissionId}}",
+							"host": [
+								"{{baseURL}} "
+							],
+							"path": [
+								"assignmentsubmission",
+								"{{submissionId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Grade Assignment Submission",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Test header is present\",()=>{\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Header Content-Type is application/json\",()=>{\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "//Graded By ,Grade Value\r\n{\r\n\"gradedBy\": null,\r\n\"grade\": -1\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/assignmentsubmission/gradesubmission/{{submissionId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"assignmentsubmission",
+								"gradesubmission",
+								"{{submissionId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete By ID(ASM_012)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Test header is present\",()=>{\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Header Content-Type is application/json\",()=>{\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/assignmentsubmission/{{assignmentId}}\n",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"assignmentsubmission",
+								"{{assignmentId}}\n"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Negative Test Cases",
+			"item": [
+				{
+					"name": "Post_Datadriven",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"assignmentId\": \"{{assignmentId}}\",\r\n    \"userId\": \"{{userId}}\",\r\n    \"subDesc\": \"subDesc for U19\",\r\n    \"subComments\": \"subComments for U19\",\r\n    \"subDateTime\": \"{{subDateTime}}\",\r\n    \"gradedBy\": null,\r\n    \"gradedDateTime\": null,\r\n    \"grade\": -1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/assignmentsubmission",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"assignmentsubmission"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_InValid User_ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"var response = pm.response.json();\r",
+									"console.log(response);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/assignmentsubmission/student/{{userId}}\n",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"assignmentsubmission",
+								"student",
+								"{{userId}}\n"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
